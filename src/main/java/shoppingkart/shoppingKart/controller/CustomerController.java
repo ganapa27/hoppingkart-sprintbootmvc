@@ -13,4 +13,9 @@ public class CustomerController {
     public String customerLogin(){
         return "customerLogin";
     }
+
+    @GetMapping("/signup")
+    public String customerSignup(){
+        return "customerSignup";
+    }
 }
