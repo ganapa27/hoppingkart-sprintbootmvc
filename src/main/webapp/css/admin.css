@@ -1,0 +1,16 @@
+body{
+    background-color: aqua;
+}
+form{
+    display: grid;
+    justify-content: center;
+}
+button{
+    background-color: bisque;
+    border-radius: 20px;
+    height: 30px;
+}
+h1{
+    display: flex;
+    justify-content: center;
+}
