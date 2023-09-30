@@ -13,10 +13,11 @@
     <form action="" method="post">
         <fieldset>
             <legend>Customer Signup</legend>
+            <h2 style="color: red; display:flex; justify-content: center;">${fail}</h2>
             Enter Name: <input type="text" name="name" required><br>
             Enter Email: <input type="email" name="email" required><br>
             Enter Date of Birth: <input type="date" name="dob" required><br>
-            Enter Phone: <input type="number" name="phone" required><br>
+            Enter Phone: <input type="number" name="number" required><br>
             Enter Password: <input type="password" name="password" required><br>
         </fieldset><br>
         <button type="submit">Signup</button>

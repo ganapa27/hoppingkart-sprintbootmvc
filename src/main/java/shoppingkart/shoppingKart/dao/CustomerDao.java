@@ -19,7 +19,7 @@ public class CustomerDao {
         return customerRepository.findByNumber(number);
     }
 
-    public void save(Customer customer) {
+    public void saveData(Customer customer) {
         customerRepository.save(customer);
     }
 }

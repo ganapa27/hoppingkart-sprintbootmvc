@@ -21,5 +21,5 @@ public class Merchant {
     private long phone;
     private String password;
     private int otp;
-    private boolean verified;
+    private boolean isVerified;
 }

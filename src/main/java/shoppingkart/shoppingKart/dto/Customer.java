@@ -17,7 +17,9 @@ public class Customer {
     private int id;
     private String name;
     private String email;
-    private String dateOfBirth;
+    private String dob;
     private long number;
     private String password;
+    private int otp;
+    private boolean isVerified;
 }
