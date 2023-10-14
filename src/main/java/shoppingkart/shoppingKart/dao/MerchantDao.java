@@ -1,5 +1,7 @@
 package shoppingkart.shoppingKart.dao;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -19,12 +21,16 @@ public class MerchantDao {
         return merchantrepository.findByPhone(phone);
     }
 
-    public void saveData(Merchant merchant) {
-        merchantrepository.save(merchant);
+    public Merchant saveData(Merchant merchant) {
+        return merchantrepository.save(merchant);
     }
 
     public Merchant fetchById(int id) {
         return merchantrepository.findById(id).orElse(null);
     }
-  
+
+    public List<Merchant> fetchAllMerchants() {
+		return merchantrepository.findAll();
+	}
+
 }

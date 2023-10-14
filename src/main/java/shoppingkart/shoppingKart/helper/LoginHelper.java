@@ -1,4 +1,4 @@
-package shoppingkart.shoppingKart.dto;
+package shoppingkart.shoppingKart.helper;
 
 import lombok.Data;
 

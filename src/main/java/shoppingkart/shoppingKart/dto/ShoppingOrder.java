@@ -1,5 +1,6 @@
 package shoppingkart.shoppingKart.dto;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import org.springframework.stereotype.Component;
@@ -11,27 +12,20 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
-import jakarta.persistence.OneToOne;
 import lombok.Data;
 
-@Data
 @Entity
+@Data
 @Component
-public class Customer {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
-    private String name;
-    private String email;
-    private String dob;
-    private long number;
-    private String password;
-    private int otp;
-    private boolean verified;
-
-    @OneToOne(cascade = CascadeType.ALL)
-	ShoppingCart cart;
+public class ShoppingOrder {
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	int id;
+	String payment_id;
+	LocalDateTime dateTime;
+	double price;
 
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-	List<ShoppingOrder> orders;
+	List<CustomerProduct> customerProducts;
+
 }
