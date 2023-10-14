@@ -8,5 +8,4 @@ public interface MerchantRepository extends JpaRepository<Merchant, Integer>{
     Merchant findByEmail(String cemail);
 
     Merchant findByPhone(long cphone);
-    
 }
