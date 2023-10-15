@@ -124,7 +124,7 @@ public class MerchantService {
     public String fetchProducts(Merchant merchant, ModelMap modelMap) {
 		List<MerchantProduct> list = merchant.getProducts();
 		if (list.isEmpty()) {
-			modelMap.put("fail", "No Products Available");
+			modelMap.put("neg", "No Products Available");
 			return "MerchantHome";
 		} else {
 			modelMap.put("list", list);
@@ -135,8 +135,8 @@ public class MerchantService {
     public String delete(int id, ModelMap modelMap, Merchant merchant, HttpSession session) {
 		MerchantProduct product = productDao.findById(id);
 		if (product == null) {
-			modelMap.put("fail", "Something Went Wrong");
-			return "Main";
+			modelMap.put("neg", "Something Went Wrong");
+			return "home";
 		} else {
 
 			for (MerchantProduct product1 : merchant.getProducts()) {
@@ -149,7 +149,7 @@ public class MerchantService {
 			Merchant merchant2 = merchantDao.saveData(merchant);
 			session.setAttribute("merchant", merchant2);
 			productDao.delete(product);
-			modelMap.put("pass", "Product Deleted Success");
+			modelMap.put("pos", "Product Deleted Success");
 			return fetchProducts(merchant2, modelMap);
 		}
 	}
@@ -158,7 +158,7 @@ public class MerchantService {
 		MerchantProduct product = productDao.findById(id);
 		if (product == null) {
 			modelMap.put("fail", "Something Went Wrong");
-			return "Main";
+			return "home";
 		} else {
 			modelMap.put("product", product);
 			return "EditProduct";

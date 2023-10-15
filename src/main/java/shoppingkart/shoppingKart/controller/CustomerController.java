@@ -9,6 +9,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.razorpay.RazorpayException;
+
 import jakarta.servlet.http.HttpSession;
 import shoppingkart.shoppingKart.dto.Customer;
 import shoppingkart.shoppingKart.helper.LoginHelper;
@@ -65,7 +67,7 @@ public class CustomerController {
 			return customerService.fetchProducts(modelMap, customer);
 		} else {
 			modelMap.put("neg", "Invalid Session");
-			return "Main";
+			return "home";
 		}
 	}
 
@@ -76,7 +78,7 @@ public class CustomerController {
 			return customerService.addToCart(id, session, customer, modelMap);
 		} else {
 			modelMap.put("neg", "Invalid Session");
-			return "Main";
+			return "home";
 		}
 	}
 
@@ -87,32 +89,32 @@ public class CustomerController {
 			return customerService.removeFromCart(id, session, customer, modelMap);
 		} else {
 			modelMap.put("neg", "Invalid Session");
-			return "Main";
+			return "home";
 		}
 	}
 
-	// @GetMapping("/cart-view")
-	// public String viewCart(HttpSession session, ModelMap modelMap) throws RazorpayException {
-	// 	Customer customer = (Customer) session.getAttribute("customer");
-	// 	if (customer != null) {
-	// 		return customerService.viewCart(session, customer, modelMap);
-	// 	} else {
-	// 		modelMap.put("neg", "Invalid Session");
-	// 		return "Main";
-	// 	}
-	// }
+	@GetMapping("/cart-view")
+	public String viewCart(HttpSession session, ModelMap modelMap) throws RazorpayException {
+		Customer customer = (Customer) session.getAttribute("customer");
+		if (customer != null) {
+			return customerService.viewCart(session, customer, modelMap);
+		} else {
+			modelMap.put("neg", "Invalid Session");
+			return "home";
+		}
+	}
 
-	// @PostMapping("/payment/{id}")
-	// public String paymentCheck(@PathVariable int id, @RequestParam String razorpay_payment_id, HttpSession session,
-	// 		ModelMap map) throws RazorpayException {
-	// 	Customer customer = (Customer) session.getAttribute("customer");
-	// 	if (customer != null) {
-	// 		return customerService.checkPayment(id,customer,razorpay_payment_id,session,map);
-	// 	} else {
-	// 		map.put("neg", "Invalid Session");
-	// 		return "Main";
-	// 	}
-	// }
+	@PostMapping("/payment/{id}")
+	public String paymentCheck(@PathVariable int id, @RequestParam String razorpay_payment_id, HttpSession session,
+			ModelMap map) throws RazorpayException {
+		Customer customer = (Customer) session.getAttribute("customer");
+		if (customer != null) {
+			return customerService.checkPayment(id,customer,razorpay_payment_id,session,map);
+		} else {
+			map.put("neg", "Invalid Session");
+			return "home";
+		}
+	}
 	
 	@GetMapping("/fetch-orders")
 	public String fetchOrders(HttpSession session, ModelMap modelMap) {
@@ -121,7 +123,7 @@ public class CustomerController {
 			return customerService.fetchOrders(modelMap, customer);
 		} else {
 			modelMap.put("neg", "Invalid Session");
-			return "Main";
+			return "home";
 		}
 	}
 }

@@ -197,7 +197,7 @@ a {
 			"prefill" : { //We recommend using the prefill parameter to auto-fill customer's contact information especially their phone number
 				"name" : "${customer.getName()}", //your customer's name
 				"email" : "${customer.getEmail()}",
-				"contact" : "+91${customer.getMobile()}" //Provide the customer's phone number for better conversion rates 
+				"contact" : "+91${customer.getNumber()}" //Provide the customer's phone number for better conversion rates 
 			},
 			"notes" : {
 				"address" : "Razorpay Corporate Office"

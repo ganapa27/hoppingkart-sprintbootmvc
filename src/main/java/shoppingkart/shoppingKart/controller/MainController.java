@@ -17,6 +17,6 @@ public class MainController {
 	public String logout(HttpSession session, ModelMap map) {
 		session.invalidate();
 		map.put("pos", "Logout Success");
-		return "Main";
+		return "home";
 	}
 }

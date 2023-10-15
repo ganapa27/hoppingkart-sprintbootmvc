@@ -57,6 +57,37 @@
     		<artifactId>tomcat-jasper</artifactId>
     		<version>10.1.12</version>
 		</dependency>
+
+		<!-- for making use of for loop -->
+		<!-- https://mvnrepository.com/artifact/jakarta.servlet.jsp.jstl/jakarta.servlet.jsp.jstl-api -->
+		<dependency>
+			<groupId>jakarta.servlet.jsp.jstl</groupId>
+			<artifactId>jakarta.servlet.jsp.jstl-api</artifactId>
+			<version>3.0.0</version>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/org.eclipse.jetty/glassfish-jstl -->
+		<dependency>
+			<groupId>org.eclipse.jetty</groupId>
+			<artifactId>glassfish-jstl</artifactId>
+			<version>11.0.17</version>
+		</dependency>
+
+		<!-- for images -->
+		<!-- https://mvnrepository.com/artifact/commons-codec/commons-codec -->
+		<dependency>
+			<groupId>commons-codec</groupId>
+			<artifactId>commons-codec</artifactId>
+			<version>1.15</version>
+		</dependency>
+
+		<!-- for payment mode -->
+		<!-- https://mvnrepository.com/artifact/com.razorpay/razorpay-java -->
+		<dependency>
+			<groupId>com.razorpay</groupId>
+			<artifactId>razorpay-java</artifactId>
+			<version>1.4.3</version>
+		</dependency>
+
 	</dependencies>
 
 	<build>

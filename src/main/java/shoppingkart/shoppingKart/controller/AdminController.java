@@ -39,6 +39,11 @@ public class AdminController {
 		return adminService.login(helper, map, session);
 	}
 
+	@GetMapping("/login")
+	public String loadLogin() {
+		return "adminLogin";
+	}
+
     @GetMapping("/fetch-products")
 	public String fetchProducts(HttpSession session, ModelMap modelMap) {
 		String admin =(String) session.getAttribute("admin");
@@ -46,7 +51,7 @@ public class AdminController {
 			return adminService.fetchProducts(modelMap);
 		} else {
 			modelMap.put("neg", "Invalid Session");
-			return "Main";
+			return "home";
 		}
 	}
 	
@@ -58,7 +63,7 @@ public class AdminController {
 			return adminService.changeProductStatus(id,map);
 		} else {
 			map.put("neg", "Invalid Session");
-			return "Main";
+			return "home";
 		}
 	}
 	
@@ -69,7 +74,7 @@ public class AdminController {
 			return adminService.fetchMerchants(modelMap);
 		} else {
 			modelMap.put("neg", "Invalid Session");
-			return "Main";
+			return "home";
 		}
 	}
 	
@@ -80,7 +85,7 @@ public class AdminController {
 			return adminService.fetchCustomers(modelMap);
 		} else {
 			modelMap.put("neg", "Invalid Session");
-			return "Main";
+			return "home";
 		}
 	}
 }

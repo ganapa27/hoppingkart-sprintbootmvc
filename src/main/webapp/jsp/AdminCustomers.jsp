@@ -140,7 +140,7 @@ th {
 						<td>${customer.getId()}</td>
 						<td>${customer.getName()}</td>
 						<td>${customer.getEmail()}</td>
-						<td>${customer.getMobile()}</td>
+						<td>${customer.getNumber()}</td>
 						<td>${customer.getGender()}</td>
 						<td>${customer.getDob()}</td>
 						<td>${customer.isStatus()}</td>

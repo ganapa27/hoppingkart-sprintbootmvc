@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -28,6 +29,16 @@ public class MerchantController {
 
     @Autowired
     MerchantProduct product;
+
+	@GetMapping("/home")
+	public String loadHome(HttpSession session, ModelMap modelMap) {
+		if (session.getAttribute("merchant") != null) {
+			return "MerchantHome";
+		} else {
+			modelMap.put("neg", "Inavlid Session");
+			return "merchantLogin";
+		}
+	}
 
     @GetMapping("/login")
     public String merchantLogin(){
@@ -62,25 +73,25 @@ public class MerchantController {
 			return "AddProduct";
 		} else {
 			map.put("neg", "Invalid Session");
-			return "Main";
+			return "home";
 		}
 	}
 
-    // @PostMapping("/add-product")
-	// public String addProduct(@Valid MerchantProduct product, BindingResult result, @RequestParam MultipartFile pic,
-	// 		ModelMap map, HttpSession session) throws IOException {
-	// 	Merchant merchant = (Merchant) session.getAttribute("merchant");
-	// 	if (merchant != null) {
-	// 		if (result.hasErrors())
-	// 			return "AddProduct";
-	// 		else {
-	// 			return merchantService.addProduct(product, pic, map, merchant, session);
-	// 		}
-	// 	} else {
-	// 		map.put("neg", "Invalid Session");
-	// 		return "Main";
-	// 	}
-	// }
+    @PostMapping("/add-product")
+	public String addProduct(@Validated MerchantProduct product, BindingResult result, @RequestParam MultipartFile pic,
+			ModelMap map, HttpSession session) throws IOException {
+		Merchant merchant = (Merchant) session.getAttribute("merchant");
+		if (merchant != null) {
+			if (result.hasErrors())
+				return "AddProduct";
+			else {
+				return merchantService.addProduct(product, pic, map, merchant, session);
+			}
+		} else {
+			map.put("neg", "Invalid Session");
+			return "home";
+		}
+	}
 
     @GetMapping("/fetch-products")
 	public String fetchProducts(HttpSession session, ModelMap modelMap) {
@@ -88,8 +99,8 @@ public class MerchantController {
 		if (merchant != null) {
 			return merchantService.fetchProducts(merchant, modelMap);
 		} else {
-			modelMap.put("neg", "Invalid Session");
-			return "Main";
+			modelMap.put("fail", "Invalid Session");
+			return "home";
 		}
 	}
 
@@ -100,7 +111,7 @@ public class MerchantController {
 			return merchantService.delete(id, modelMap, merchant, session);
 		} else {
 			modelMap.put("neg", "Invalid Session");
-			return "Main";
+			return "home";
 		}
 	}
 
@@ -111,23 +122,23 @@ public class MerchantController {
 			return merchantService.edit(id, modelMap);
 		} else {
 			modelMap.put("neg", "Invalid Session");
-			return "Main";
+			return "home";
 		}
 	}
 
-	// @PostMapping("/update-product")
-	// public String updateProduct(@Valid MerchantProduct product, BindingResult result, @RequestParam MultipartFile pic,
-	// 		ModelMap map, HttpSession session) throws IOException {
-	// 	Merchant merchant = (Merchant) session.getAttribute("merchant");
-	// 	if (merchant != null) {
-	// 		if (result.hasErrors())
-	// 			return "EditProduct";
-	// 		else {
-	// 			return merchantService.editProduct(product, pic, map, merchant, session);
-	// 		}
-	// 	} else {
-	// 		map.put("neg", "Invalid Session");
-	// 		return "Main";
-	// 	}
-	// }
+	@PostMapping("/update-product")
+	public String updateProduct(@Validated MerchantProduct product, BindingResult result, @RequestParam MultipartFile pic,
+			ModelMap map, HttpSession session) throws IOException {
+		Merchant merchant = (Merchant) session.getAttribute("merchant");
+		if (merchant != null) {
+			if (result.hasErrors())
+				return "EditProduct";
+			else {
+				return merchantService.editProduct(product, pic, map, merchant, session);
+			}
+		} else {
+			map.put("neg", "Invalid Session");
+			return "home";
+		}
+	}
 }

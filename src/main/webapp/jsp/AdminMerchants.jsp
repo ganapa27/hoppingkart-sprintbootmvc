@@ -128,7 +128,6 @@ th {
 					<th>Merchant Name</th>
 					<th>Email</th>
 					<th>Mobile</th>
-					<th>Gender</th>
 					<th>Date of Birth</th>
 					<th>Status</th>
 				</tr>
@@ -139,10 +138,9 @@ th {
 						<td>${merchant.getId()}</td>
 						<td>${merchant.getName()}</td>
 						<td>${merchant.getEmail()}</td>
-						<td>${merchant.getMobile()}</td>
-						<td>${merchant.getGender()}</td>
+						<td>${merchant.getPhone()}</td>
 						<td>${merchant.getDob()}</td>
-						<td>${merchant.isStatus()}</td>
+						<td>${merchant.isVerified()}</td>
 					</tr>
 				</c:forEach>
 			</tbody>

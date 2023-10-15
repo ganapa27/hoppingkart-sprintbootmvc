@@ -57,7 +57,7 @@ public class AdminService {
 		MerchantProduct product = productDao.findById(id);
 		if (product == null) {
 			map.put("neg", "Something Went Wrong");
-			return "Main";
+			return "home";
 		} else {
 			if (product.isApproved())
 				product.setApproved(false);

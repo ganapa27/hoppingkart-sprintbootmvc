@@ -5,9 +5,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.ModelMap;
+
+import com.razorpay.Order;
+import com.razorpay.RazorpayClient;
+import com.razorpay.RazorpayException;
 
 import jakarta.servlet.http.HttpSession;
 import shoppingkart.shoppingKart.dao.CustomerDao;
@@ -51,8 +56,10 @@ public class CustomerService {
         int otp = new Random().nextInt(100000,999999);
         customer.setOtp(otp);
         // Logic for sending email
+        mailHelper.sendOtp(customer);
         customerDao.saveData(customer);
         map.put("success","Email sent successfully");
+		map.put("id",customer.getId());
         return "verifyOtp2";
     }
 
@@ -60,13 +67,13 @@ public class CustomerService {
 		Customer customer = customerDao.fetchById(id);
 		if (customer == null) {
 			modelMap.put("neg", "Something went Wrong");
-			return "Main";
+			return "Home";
 		} else {
 			if (customer.getOtp() == otp) {
 				customer.setVerified(true);
 				customerDao.saveData(customer);
 				modelMap.put("pos", "Account Verified Successfully");
-				return "Customer";
+				return "customerLogin";
 			} else {
 				modelMap.put("neg", "OTP MissMatch");
 				modelMap.put("id", id);
@@ -81,7 +88,7 @@ public class CustomerService {
 			map.put("neg", "Incorrect Email");
 			return "Customer";
 		} else {
-			if (AES.decrypt(customer.getPassword(), "123").equals(helper.getPassword())) {
+			if (AES.decrypt(customer.getPassword(), "123456789").equals(helper.getPassword())) {
 				if (customer.isVerified()) {
 					session.setMaxInactiveInterval(150);
 					session.setAttribute("customer", customer);
@@ -89,7 +96,7 @@ public class CustomerService {
 					return "CustomerHome";
 				} else {
 					map.put("neg", "Verify Your OTP First");
-//					mailHelper.sendOtp(customer);
+					mailHelper.sendOtp(customer);
 					map.put("id", customer.getId());
 					return "VerifyOtp2";
 				}
@@ -164,7 +171,7 @@ public class CustomerService {
 			return fetchProducts(modelMap, customerDao.fetchById(customer.getId()));
 		} else {
 			modelMap.put("neg", "Something went Wrong");
-			return "Main";
+			return "home";
 		}
 	}
 
@@ -213,98 +220,98 @@ public class CustomerService {
 			}
 		} else {
 			modelMap.put("neg", "Something went Wrong");
-			return "Main";
+			return "home";
 		}
 	}
 
-	// public String viewCart(HttpSession session, Customer customer, ModelMap modelMap) throws RazorpayException {
-	// 	ShoppingCart cart = customer.getCart();
-	// 	if (cart == null) {
-	// 		modelMap.put("neg", "No Items in Cart");
-	// 		return fetchProducts(modelMap, customerDao.fetchById(customer.getId()));
-	// 	} else {
-	// 		List<CustomerProduct> list = cart.getCustomerProducts();
-	// 		if (list == null || list.isEmpty()) {
-	// 			modelMap.put("neg", "No Items in Cart");
-	// 			return fetchProducts(modelMap, customerDao.fetchById(customer.getId()));
-	// 		} else {
-	// 			boolean flag = true;
-	// 			for (CustomerProduct customerProduct : list) {
-	// 				if (customerProduct.getQuantity() > 0)
-	// 					flag = false;
-	// 				break;
-	// 			}
-	// 			if (flag) {
-	// 				modelMap.put("neg", "No Items in Cart");
-	// 				return fetchProducts(modelMap, customerDao.fetchById(customer.getId()));
-	// 			} else {
-	// 				double amount = 0;
-	// 				for (CustomerProduct customerProduct : list) {
-	// 					amount = amount + customerProduct.getPrice();
-	// 				}
+	public String viewCart(HttpSession session, Customer customer, ModelMap modelMap) throws RazorpayException {
+		ShoppingCart cart = customer.getCart();
+		if (cart == null) {
+			modelMap.put("neg", "No Items in Cart");
+			return fetchProducts(modelMap, customerDao.fetchById(customer.getId()));
+		} else {
+			List<CustomerProduct> list = cart.getCustomerProducts();
+			if (list == null || list.isEmpty()) {
+				modelMap.put("neg", "No Items in Cart");
+				return fetchProducts(modelMap, customerDao.fetchById(customer.getId()));
+			} else {
+				boolean flag = true;
+				for (CustomerProduct customerProduct : list) {
+					if (customerProduct.getQuantity() > 0)
+						flag = false;
+					break;
+				}
+				if (flag) {
+					modelMap.put("neg", "No Items in Cart");
+					return fetchProducts(modelMap, customerDao.fetchById(customer.getId()));
+				} else {
+					double amount = 0;
+					for (CustomerProduct customerProduct : list) {
+						amount = amount + customerProduct.getPrice();
+					}
 
-	// 				JSONObject object = new JSONObject();
-	// 				object.put("amount", (int) (amount * 100));
-	// 				object.put("currency", "INR");
+					JSONObject object = new JSONObject();
+					object.put("amount", (int) (amount * 100));
+					object.put("currency", "INR");
 
-	// 				RazorpayClient client = new RazorpayClient("rzp_test_pXzztvFSoP8U0y", "CSRywILSxpj4nnthtfisyY57");
-	// 				Order order = client.orders.create(object);
-	// 				PaymentDetails details=new PaymentDetails();
-	// 				details.setAmount(order.get("amount").toString());
-	// 				details.setCurrency(order.get("currency").toString());
-	// 				details.setPaymentId(null);
-	// 				details.setOrderId(order.get("id").toString());
-	// 				details.setStatus(order.get("status"));
-	// 				details.setKeyDetails("rzp_test_pXzztvFSoP8U0y");
+					RazorpayClient client = new RazorpayClient("rzp_test_pXzztvFSoP8U0y", "CSRywILSxpj4nnthtfisyY57");
+					Order order = client.orders.create(object);
+					PaymentDetails details=new PaymentDetails();
+					details.setAmount(order.get("amount").toString());
+					details.setCurrency(order.get("currency").toString());
+					details.setPaymentId(null);
+					details.setOrderId(order.get("id").toString());
+					details.setStatus(order.get("status"));
+					details.setKeyDetails("rzp_test_pXzztvFSoP8U0y");
 
-	// 				session.setAttribute("customer", customerDao.fetchById(customer.getId()));
-	// 				modelMap.put("details", productDao.saveDetails(details));
-	// 				modelMap.put("items", list);
-	// 				modelMap.put("customer", customerDao.fetchById(customer.getId()));
-	// 				return "ViewCart";
-	// 			}
-	// 		}
-	// 	}
-	// }
+					session.setAttribute("customer", customerDao.fetchById(customer.getId()));
+					modelMap.put("details", productDao.saveDetails(details));
+					modelMap.put("items", list);
+					modelMap.put("customer", customerDao.fetchById(customer.getId()));
+					return "ViewCart";
+				}
+			}
+		}
+	}
 
-	// public String checkPayment(int id, Customer customer, String razorpay_payment_id, HttpSession session, ModelMap map)
-	// 		throws RazorpayException {
-	// 	PaymentDetails details = productDao.find(id);
-	// 	if (details == null) {
-	// 		map.put("neg", "Something went wrong");
-	// 		return "Main";
-	// 	} else {
-	// 		if (razorpay_payment_id != null) {
-	// 			details.setStatus("success");
-	// 			details.setTime(LocalDateTime.now());
-	// 			details.setPaymentId(razorpay_payment_id);
-	// 			productDao.saveDetails(details);
+	public String checkPayment(int id, Customer customer, String razorpay_payment_id, HttpSession session, ModelMap map)
+			throws RazorpayException {
+		PaymentDetails details = productDao.find(id);
+		if (details == null) {
+			map.put("neg", "Something went wrong");
+			return "home";
+		} else {
+			if (razorpay_payment_id != null) {
+				details.setStatus("success");
+				details.setTime(LocalDateTime.now());
+				details.setPaymentId(razorpay_payment_id);
+				productDao.saveDetails(details);
 
-	// 			order.setDateTime(LocalDateTime.now());
-	// 			order.setPayment_id(razorpay_payment_id);
-	// 			order.setPrice(Double.parseDouble(details.getAmount()) / 100);
-	// 			order.setCustomerProducts(customer.getCart().getCustomerProducts());
+				order.setDateTime(LocalDateTime.now());
+				order.setPayment_id(razorpay_payment_id);
+				order.setPrice(Double.parseDouble(details.getAmount()) / 100);
+				order.setCustomerProducts(customer.getCart().getCustomerProducts());
 
-	// 			List<ShoppingOrder> list = customer.getOrders();
-	// 			if (list == null)
-	// 				list = new ArrayList<ShoppingOrder>();
-	// 			list.add(order);
+				List<ShoppingOrder> list = customer.getOrders();
+				if (list == null)
+					list = new ArrayList<ShoppingOrder>();
+				list.add(order);
 
-	// 			customer.setOrders(list);
-	// 			customer.setCart(null);
-	// 			customerDao.saveData(customer);
+				customer.setOrders(list);
+				customer.setCart(null);
+				customerDao.saveData(customer);
 				
-	// 			session.setAttribute("customer", customerDao.fetchById(customer.getId()));
+				session.setAttribute("customer", customerDao.fetchById(customer.getId()));
 
-	// 			map.put("pos", "Payment Done, Ordere Placed");
-	// 			return "CustomerHome";
+				map.put("pos", "Payment Done, Ordere Placed");
+				return "CustomerHome";
 
-	// 		} else {
-	// 			map.put("neg", "Payment Not Done");
-	// 			return viewCart(session, customer, map);
-	// 		}
-	// 	}
-	// }
+			} else {
+				map.put("neg", "Payment Not Done");
+				return viewCart(session, customer, map);
+			}
+		}
+	}
 
 	public String fetchOrders(ModelMap modelMap, Customer customer) {
 		List<ShoppingOrder> orders = customer.getOrders();
