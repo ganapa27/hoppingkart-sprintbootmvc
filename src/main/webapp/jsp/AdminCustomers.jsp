@@ -141,9 +141,8 @@ th {
 						<td>${customer.getName()}</td>
 						<td>${customer.getEmail()}</td>
 						<td>${customer.getNumber()}</td>
-						<td>${customer.getGender()}</td>
 						<td>${customer.getDob()}</td>
-						<td>${customer.isStatus()}</td>
+						<td>${customer.isVerified()}</td>
 					</tr>
 				</c:forEach>
 			</tbody>
