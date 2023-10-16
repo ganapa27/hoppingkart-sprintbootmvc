@@ -11,9 +11,9 @@
 <body>
     <h1>Customer Signup</h1>
     <form action="" method="post">
+        <h2 style="color: red; display:flex; justify-content: center;">${fail}</h2>
         <fieldset>
             <legend>Customer Signup</legend>
-            <h2 style="color: red; display:flex; justify-content: center;">${fail}</h2>
             Enter Name: <input type="text" name="name" required><br>
             Enter Email: <input type="email" name="email" required><br>
             Enter Date of Birth: <input type="date" name="dob" required><br>
